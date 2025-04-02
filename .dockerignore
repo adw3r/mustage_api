@@ -1,0 +1,14 @@
+.venv
+logs
+migrations
+postgres_data
+tests
+.idea
+
+.dockerignore
+.gitignore
+alembic.ini
+docker-compose.yaml
+Dockerfile
+
+__pycache__
