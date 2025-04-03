@@ -13,10 +13,10 @@ dependencies = [
     "selectolax>=0.3.28",
     "sqlalchemy>=2.0.40",
     "uvicorn>=0.34.0",
+    "alembic>=1.15.2",
 ]
 
 [dependency-groups]
 dev = [
     "aiosqlite>=0.21.0",
-    "alembic>=1.15.2",
 ]
