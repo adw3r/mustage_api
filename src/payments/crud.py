@@ -25,7 +25,7 @@ class PaymentsRead(PaymentsBase):
 
     async def get_with_specific_date(self, date: str | datetime):
         if isinstance(date, str):
-            date = datetime.strptime(date, "%Y-%m-%d").date()
+            date = datetime.strptime(date, "%d.%m.%Y").date()
 
         stmt = select(models.Payment).where(models.Payment.created_at == date)
         result =await self.session.execute(stmt)

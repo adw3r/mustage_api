@@ -28,6 +28,8 @@ async def get_payments(created_at: str = None, db: AsyncSession = Depends(get_se
         return result
     try:
         result = await crud.get_with_specific_date(created_at)
+        if not result:
+            return Response(status_code=starlette.status.HTTP_204_NO_CONTENT)
         return result
     except ValueError as error:
         raise HTTPException(status_code=starlette.status.HTTP_422_UNPROCESSABLE_ENTITY, detail={'error': str(error)})
