@@ -48,6 +48,16 @@ async def get_payments(
         raise HTTPException(status_code=starlette.status.HTTP_500_INTERNAL_SERVER_ERROR, detail={'error': str(error)})
 
 
+@router.get('/{payment_id}')
+async def get_payment_by_id(payment_id: int, db: AsyncSession = Depends(get_session)):
+    crud = src.payments.crud.PaymentsRead(db)
+    result: models.Payment | None = await crud.get_by_id(payment_id)
+    if result:
+        return result
+    else:
+        return JSONResponse(status_code=starlette.status.HTTP_404_NOT_FOUND, content={'error': 'not found'})
+
+
 @router.post("/")
 async def add_payment(payment: schemas.PaymentCreate, db: AsyncSession = Depends(get_session)) -> schemas.PaymentCreate:
     try:
