@@ -18,13 +18,13 @@ router = APIRouter(prefix='/payments', tags=['Payments'])
 async def get_payments(
         created_at: str = None,
         up_to_created_at: str | None = None,
-        db: AsyncSession = Depends(get_session)) -> list[schemas.PaymentCreate]:
+        db: AsyncSession = Depends(get_session)) -> list[schemas.PaymentsResponse]:
     """
 
     :param up_to_created_at: date in format %d.%m.%Y
     :param created_at: created at date in format %d.%m.%Y
     :param db: internal dependence on db
-    :return: list of PaymentCreate json
+    :return: list of PaymentsResponse json
     """
     crud = src.payments.crud.PaymentsRead(db)
     if not created_at:
