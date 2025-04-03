@@ -15,16 +15,26 @@ from src.core.log import logger
 router = APIRouter(prefix='/payments', tags=['Payments'])
 
 @router.get("/")
-async def get_payments(created_at: str = None, db: AsyncSession = Depends(get_session)) -> list[schemas.PaymentCreate]:
+async def get_payments(
+        created_at: str = None,
+        up_to_created_at: str | None = None,
+        db: AsyncSession = Depends(get_session)) -> list[schemas.PaymentCreate]:
     """
 
-    :param created_at: created at date in format %Y-%m-%d
+    :param up_to_created_at: date in format %d.%m.%Y
+    :param created_at: created at date in format %d.%m.%Y
     :param db: internal dependence on db
     :return: list of PaymentCreate json
     """
     crud = src.payments.crud.PaymentsRead(db)
     if not created_at:
         result = await crud.get_all()
+        return result
+    if created_at and not up_to_created_at:
+        result = await crud.get_from_specific_date_to_today(created_at)
+        return result
+    if created_at and up_to_created_at:
+        result = await crud.get_in_date_ranges(created_at, up_to_created_at)
         return result
     try:
         result = await crud.get_with_specific_date(created_at)
@@ -60,9 +70,10 @@ async def delete_payment(payment_id: int, db: AsyncSession = Depends(get_session
     try:
         res = await crud.delete_with_id(payment_id)
         if res:
-            return JSONResponse(status_code=200, content={'message': 'Payment deleted', 'payment': res})
+            return JSONResponse(status_code=starlette.status.HTTP_200_OK,
+                                content={'message': 'Payment deleted', 'payment_id': payment_id})
         else:
-            return JSONResponse(status_code=204, content={'message': 'Payment not exists'})
+            return Response(status_code=starlette.status.HTTP_204_NO_CONTENT)
     except Exception as error:
         logger.error(error)
         raise HTTPException(status_code=starlette.status.HTTP_500_INTERNAL_SERVER_ERROR)

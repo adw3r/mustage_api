@@ -14,7 +14,7 @@ def test_get_all(client):
     assert response.status_code == 200
 
 def test_get_payment_with_date(client):
-    response = client.get("/payments", params={"created_at": "03.04.2025"})
+    response = client.get("/payments", params={"created_at": "01.04.2025"})
     print(response.text)
     assert response.status_code == 200
 

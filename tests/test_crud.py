@@ -28,11 +28,17 @@ async def test_crud_get_all(async_session):
 
 @pytest.mark.asyncio
 async def test_get_with_specific_date(async_session):
-    result = await crud.PaymentsRead(async_session).get_with_specific_date('2025-04-01')
+    result = await crud.PaymentsRead(async_session).get_with_specific_date('03.04.2025')
     print(result)
     assert result is not None
     assert isinstance(result[0], models.Payment)
     assert result[0].id is not None
+
+@pytest.mark.asyncio
+async def test_get_date_ranges(async_session):
+    result = await crud.PaymentsRead(async_session).get_in_date_ranges('01.04.2025', '03.04.2025')
+    print(result)
+    assert result is not None
 
 @pytest.mark.asyncio
 async def test_delete(async_session):

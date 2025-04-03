@@ -13,6 +13,19 @@ class PaymentsBase:
 
 
 class PaymentsRead(PaymentsBase):
+    async def get_in_date_ranges(self, created_at: str | datetime, up_to_created_at: str | datetime):
+        if isinstance(created_at, str):
+            created_at = datetime.strptime(created_at, "%d.%m.%Y").date()
+        if isinstance(up_to_created_at, str):
+            up_to_created_at = datetime.strptime(up_to_created_at, "%d.%m.%Y").date()
+
+        stmt = select(models.Payment).where(models.Payment.created_at.between(created_at, up_to_created_at))
+        result = await self.session.execute(stmt)
+        return list(result.scalars())
+
+    async def get_from_specific_date_to_today(self, created_at: str | datetime):
+        return await self.get_in_date_ranges(created_at, datetime.today().date())
+
     async def get_by_id(self, id_: int) -> models.Payment | None:
         stmt = select(models.Payment).where(models.Payment.id == id_)
         res = await self.session.execute(stmt)
