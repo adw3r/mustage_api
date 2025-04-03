@@ -27,7 +27,7 @@ async def get_payments(
     :return: list of PaymentsResponse json
     """
     crud = src.payments.crud.PaymentsRead(db)
-    if not created_at:
+    if not created_at and not up_to_created_at:
         result = await crud.get_all()
         return result
     if created_at and not up_to_created_at:
