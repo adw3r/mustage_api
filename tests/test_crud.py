@@ -34,9 +34,16 @@ async def test_get_with_specific_date(async_session):
     assert isinstance(result[0], models.Payment)
     assert result[0].id is not None
 
+@pytest.mark.asyncio
+async def test_delete(async_session):
+    id_ = 2
+    result = await crud.PaymentsDelete(async_session).delete_with_id(id_)
+    print(result)
+    assert result is not None
+
 
 @pytest.mark.asyncio
-async def test_insert_and_delete(async_session):
+async def test_insert(async_session):
     model = models.Payment(
         id=2, created_at=datetime.date(2025, 4, 1), comment='test', amount_uah=1000.0,
         amount_usd=23.3
@@ -45,10 +52,6 @@ async def test_insert_and_delete(async_session):
     print(result)
     assert result is not None
 
-    id_ = 2
-    result = await crud.PaymentsDelete(async_session).delete_with_id(id_)
-    print(result)
-    assert result is not None
 
 
 @pytest.mark.asyncio
